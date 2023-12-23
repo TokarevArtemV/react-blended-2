@@ -1,19 +1,25 @@
 import { Component } from 'react';
 
 import * as ImageService from 'service/image-service';
-import { Button, SearchForm, Grid, GridItem, Text, CardItem } from 'components';
+import { Button, SearchForm, Text, GalleryList } from 'components';
 
 export class Gallery extends Component {
   state = {
     query: '',
     page: 1,
+    photos: [],
   };
 
   async componentDidUpdate(_, prevState) {
     const { query, page } = this.state;
     if (prevState.query !== query || prevState.page !== page) {
-      const data = await ImageService.getImages(query, page);
-      console.log(data);
+      const { photos, total_results } = await ImageService.getImages(
+        query,
+        page
+      );
+      this.setState(prevState => ({
+        photos: [...prevState.photos, ...photos],
+      }));
     }
   }
 
@@ -24,9 +30,11 @@ export class Gallery extends Component {
   };
 
   render() {
+    const { photos } = this.state;
     return (
       <>
         <SearchForm onSubmit={this.onSubmit} />
+        {photos.length > 0 && <GalleryList photos={photos} />}
         {/* <Text textAlign="center">Sorry. There are no images ... 😭</Text> */}
       </>
     );
