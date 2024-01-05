@@ -2,8 +2,15 @@ import { Component } from 'react';
 import { nanoid } from 'nanoid';
 import { Grid, GridItem, SearchForm, EditForm, Text, Todo } from 'components';
 
-export class Todos extends Component {
-  render() {
-    return <Text>Todos</Text>;
-  }
-}
+import { useEffect, useState } from 'react';
+
+export const Todos = () => {
+  const onSubmit = query => {};
+
+  return (
+    <>
+      <Text>Todos</Text>
+      <SearchForm onSubmit={onSubmit} />
+    </>
+  );
+};
