@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import { Grid, GridItem, SearchForm, EditForm, Text, Todo } from 'components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const TODOSKEY = 'todos';
 
@@ -11,9 +11,13 @@ export const Todos = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentTodo, setCurrentTodo] = useState({});
 
+  useEffect(() => {
+    saveToLocalStoradge(todos);
+  }, [todos]);
+
   const handleDelTodo = id => {
     const newTodos = todos.filter(todo => todo.id !== id);
-    saveToLocalStoradge(newTodos);
+
     setTodos(newTodos);
   };
 
@@ -32,17 +36,11 @@ export const Todos = () => {
       return todo.id === currentTodo.id ? { id: todo.id, text } : todo;
     });
     setTodos(changedTodos);
-    saveToLocalStoradge(changedTodos);
+    setCurrentTodo({});
   };
 
   const onSubmit = query => {
     const todo = { id: nanoid(), text: query };
-    const todos = getFromLocalStoradge();
-
-    todos.push(todo);
-
-    saveToLocalStoradge(todos);
-
     setTodos(prev => [...prev, todo]);
   };
 
